@@ -25,26 +25,40 @@ class ObatController extends Controller
         return view('obat.index', compact('semuaObat', 'search'));
     }
 
-    // Menyimpan nama obat baru
+    // Menyimpan nama obat baru (Super Ketat)
     public function store(Request $request)
     {
         $request->validate([
             'kode_obat' => 'required',
             'nama_obat' => 'required',
+        ], [
+            'kode_obat.required' => 'Kode obat wajib diisi ya!',
+            'nama_obat.required' => 'Nama obat beserta dosisnya wajib diisi!',
         ]);
 
-        // Cek duplikat langsung ke tabel 'input / edit nama obat'
-        $cekDuplikat = DB::table('input / edit nama obat')
+        // ATURAN 1: Cek apakah KODE OBAT sudah pernah ada? (Mutlak Unik)
+        $cekKode = DB::table('input / edit nama obat')
             ->where('Kode Obat', $request->kode_obat)
             ->exists();
 
-        if ($cekDuplikat) {
+        if ($cekKode) {
             return redirect()->back()
                 ->withInput()
-                ->withErrors(['kode_obat' => 'Gagal Tambah! Kode obat ini sudah terdaftar di sistem. Silakan update stoknya saja di menu Stok Obat.']);
+                ->withErrors(['kode_obat' => 'Gagal Tambah! Kode obat ini sudah terdaftar di sistem. Satu kode khusus untuk satu obat!']);
         }
 
-        // Simpan data ke tabel 'input / edit nama obat'
+        // ATURAN 2: Cek apakah NAMA OBAT + DOSIS sudah pernah ada? (Mutlak Unik)
+        $cekNama = DB::table('input / edit nama obat')
+            ->where('Nama Obat', $request->nama_obat)
+            ->exists();
+
+        if ($cekNama) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['nama_obat' => 'Gagal Tambah! Nama obat dengan dosis tersebut sudah ada di sistem.']);
+        }
+
+        // SIMPAN: Jika lolos kedua pengecekan di atas, baru data dimasukkan
         DB::table('input / edit nama obat')->insert([
             'Kode Obat' => $request->kode_obat,
             'Nama Obat' => $request->nama_obat,
@@ -71,27 +85,42 @@ class ObatController extends Controller
         return view('obat.index', compact('obat', 'semuaObat', 'search'));
     }
 
-    // Memperbarui data nama obat
+    // Memperbarui data nama obat (Super Ketat)
     public function update(Request $request, $id)
     {
         $request->validate([
             'kode_obat' => 'required',
             'nama_obat' => 'required',
+        ], [
+            'kode_obat.required' => 'Kode obat wajib diisi!',
+            'nama_obat.required' => 'Nama obat wajib diisi!',
         ]);
 
-        // Cek duplikat ke tabel yang benar dengan mengecualikan id obat ini
-        $cekDuplikat = DB::table('input / edit nama obat')
+        // ATURAN 1 PAS EDIT: Cek apakah kode baru sudah dipakai oleh obat lain
+        $cekKode = DB::table('input / edit nama obat')
             ->where('Kode Obat', $request->kode_obat)
             ->where('id obat', '!=', $id)
             ->exists();
 
-        if ($cekDuplikat) {
+        if ($cekKode) {
             return redirect()->back()
                 ->withInput()
-                ->withErrors(['kode_obat' => 'Gagal Ubah! Kode obat ini sudah dipakai oleh obat lain.']);
+                ->withErrors(['kode_obat' => 'Gagal Ubah! Kode obat ini sudah dipakai oleh data obat lain.']);
         }
 
-        // Update ke tabel yang benar
+        // ATURAN 2 PAS EDIT: Cek apakah nama + dosis baru sudah dipakai oleh obat lain
+        $cekNama = DB::table('input / edit nama obat')
+            ->where('Nama Obat', $request->nama_obat)
+            ->where('id obat', '!=', $id)
+            ->exists();
+
+        if ($cekNama) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['nama_obat' => 'Gagal Ubah! Nama obat dengan dosis ini sudah ada di data lain.']);
+        }
+
+        // UPDATE: Jalankan jika lolos validasi
         DB::table('input / edit nama obat')->where('id obat', $id)->update([
             'Kode Obat' => $request->kode_obat,
             'Nama Obat' => $request->nama_obat,
