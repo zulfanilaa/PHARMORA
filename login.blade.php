@@ -17,19 +17,53 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        @keyframes bgShift {
+        /* ── Animasi background ── */
+        @keyframes bgPulse {
             0%   { background-position: 0% 50%; }
             50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        @keyframes bgOrbs {
+            0%, 100% { transform: scale(1) translate(0, 0); }
+            33%       { transform: scale(1.1) translate(20px, -15px); }
+            66%       { transform: scale(0.95) translate(-15px, 10px); }
+        }
 
         body {
-            background: linear-gradient(135deg, #c2dcff, #daeeff, #b8d4ff, #e0eeff);
-            background-size: 300% 300%;
-            animation: bgShift 8s ease infinite;
+            background: linear-gradient(135deg, #a8c8ff, #c5deff, #d4e8ff, #b0ccff, #e8f2ff, #9dc0ff);
+            background-size: 400% 400%;
+            animation: bgPulse 10s ease infinite;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Orb kiri atas */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(100,160,255,0.35) 0%, transparent 70%);
+            top: -100px; left: -100px;
+            border-radius: 50%;
+            animation: bgOrbs 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Orb kanan bawah */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(150,200,255,0.3) 0%, transparent 70%);
+            bottom: -80px; right: -80px;
+            border-radius: 50%;
+            animation: bgOrbs 11s ease-in-out 2s infinite reverse;
+            pointer-events: none;
+            z-index: 0;
         }
 
         @keyframes cardEntrance {
@@ -92,8 +126,6 @@
             from { transform: scale(0); opacity: 0; }
             to   { transform: scale(1); opacity: 1; }
         }
-
-        /* ── Notifikasi error slide down ── */
         @keyframes slideDown {
             0%   { opacity: 0; transform: translateY(-12px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -108,6 +140,7 @@
             width: 880px;
             height: 470px;
             position: relative;
+            z-index: 1;
             animation: cardEntrance 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
 
@@ -157,23 +190,26 @@
         /* ── Logo ── */
         .logo-area {
             display: flex; flex-direction: row;
-            align-items: center; gap: 10px;
+            align-items: center; gap: 8px;
             margin-bottom: 1rem;
+            flex-wrap: nowrap;
             animation: dropIn 0.5s cubic-bezier(0.22,1,0.36,1) 0.55s both;
         }
         .logo-area img {
-            width: 75px; height: auto; flex-shrink: 0;
+            width: 80px; height: auto; flex-shrink: 0;
             animation: floatLogo 3.5s ease-in-out 1.2s infinite,
                        logoShimmer 3.5s ease-in-out 1.2s infinite;
         }
         .logo-area .logo-text { display: flex; flex-direction: column; }
         .logo-area .logo-name {
-            font-size: 1rem; font-weight: 800;
+            font-size: 1.7rem; font-weight: 800;
             color: #1954c9; line-height: 1.1; letter-spacing: 0.5px;
+            white-space: nowrap;
         }
         .logo-area .logo-sub {
-            font-size: 0.6rem; color: #6c757d; font-weight: 500;
+            font-size: 0.62rem; color: #6c757d; font-weight: 500;
             letter-spacing: 0.4px; text-transform: uppercase;
+            white-space: nowrap;
         }
 
         .logo-divider {
@@ -214,18 +250,13 @@
             box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
             border-color: #007bff;
         }
-        /* Input merah saat error */
         .form-control.is-invalid-custom {
             border-color: #e53e3e !important;
             background-color: #fff5f5 !important;
         }
         .input-group-text { color: #94a3b8; }
 
-        /* ══════════════════════════════════════
-           NOTIFIKASI ERROR
-           – muncul di bawah subtitle
-           – animasi slide down + shake ringan
-        ══════════════════════════════════════ */
+        /* ══ NOTIFIKASI ERROR ══ */
         .alert-error {
             display: flex;
             align-items: center;
@@ -360,11 +391,6 @@
             <h3 class="form-title fw-bold">Selamat Datang</h3>
             <p class="form-subtitle">Login untuk mengakses sistem</p>
 
-            {{-- ══ NOTIFIKASI ERROR ══
-                 Muncul otomatis jika:
-                 1. session('error')  → dari AuthController saat credentials salah
-                 2. $errors->any()    → validasi Laravel gagal
-            ══════════════════════════ --}}
             @if(session('error'))
                 <div class="alert-error">
                     <i class="bi bi-exclamation-circle-fill"></i>
