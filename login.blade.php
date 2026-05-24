@@ -11,15 +11,12 @@
         *, *::before, *::after { box-sizing: border-box; }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* ── Animated gradient background ── */
         @keyframes bgShift {
             0%   { background-position: 0% 50%; }
             50%  { background-position: 100% 50%; }
@@ -35,48 +32,31 @@
             justify-content: center;
         }
 
-        /* ══════════════════════════════════════
-           ENTRANCE ANIMATIONS
-        ══════════════════════════════════════ */
-
-        /* Wrapper: zoom dari kecil ke normal */
         @keyframes cardEntrance {
             0%   { opacity: 0; transform: scale(0.82) translateY(30px); }
             60%  { opacity: 1; transform: scale(1.02) translateY(-4px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
-
-        /* Form section: slide dari kiri */
         @keyframes slideFromLeft {
             0%   { opacity: 0; transform: translateX(-60px); }
             100% { opacity: 1; transform: translateX(0); }
         }
-
-        /* Ilustrasi kanan: slide dari kanan */
         @keyframes slideFromRight {
             0%   { opacity: 0; transform: translateX(60px); }
             100% { opacity: 1; transform: translateX(0); }
         }
-
-        /* Logo: muncul dari atas */
         @keyframes dropIn {
             0%   { opacity: 0; transform: translateY(-20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-
-        /* Field & button: muncul berurutan dari bawah */
         @keyframes riseUp {
             0%   { opacity: 0; transform: translateY(18px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-
-        /* Judul: fade in */
         @keyframes fadeIn {
             0%   { opacity: 0; }
             100% { opacity: 1; }
         }
-
-        /* ── Idle loop: float + shimmer ── */
         @keyframes floatIllust {
             0%, 100% { transform: translateY(0px); }
             50%       { transform: translateY(-7px); }
@@ -86,9 +66,9 @@
             50%       { transform: translateY(-4px); }
         }
         @keyframes logoShimmer {
-            0%   { filter: drop-shadow(0 0 0px rgba(29, 97, 228, 0)); }
-            50%  { filter: drop-shadow(0 0 8px rgba(29, 97, 228, 0.45)); }
-            100% { filter: drop-shadow(0 0 0px rgba(29, 97, 228, 0)); }
+            0%   { filter: drop-shadow(0 0 0px rgba(29,97,228,0)); }
+            50%  { filter: drop-shadow(0 0 8px rgba(29,97,228,0.45)); }
+            100% { filter: drop-shadow(0 0 0px rgba(29,97,228,0)); }
         }
         @keyframes btnShimmer {
             0%   { background-position: -200% center; }
@@ -98,118 +78,94 @@
             0%   { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%       { transform: translateX(-6px); }
+            40%       { transform: translateX(6px); }
+            60%       { transform: translateX(-4px); }
+            80%       { transform: translateX(4px); }
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
 
-        /* ══════════════════════════════════════
-           CARD WRAPPER
-        ══════════════════════════════════════ */
+        /* ── Notifikasi error slide down ── */
+        @keyframes slideDown {
+            0%   { opacity: 0; transform: translateY(-12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ══ CARD ══ */
         .login-wrapper {
             background: #2b74e2;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.18);
             overflow: hidden;
             width: 880px;
             height: 470px;
             position: relative;
-
-            /* Entrance */
-            animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation: cardEntrance 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
 
-        /* ══════════════════════════════════════
-           ILUSTRASI KANAN
-           – clip sama persis dengan form-section
-           – gambar fill penuh di dalam clip-nya
-        ══════════════════════════════════════ */
+        /* ══ ILUSTRASI KANAN ══ */
         .bg-image-container {
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; right: 0;
+            width: 100%; height: 100%;
             z-index: 1;
-
-            /* Entrance: slide dari kanan, delay setelah card muncul */
             animation:
-                slideFromRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both,
-                floatIllust     4s   ease-in-out                      1.2s infinite;
+                slideFromRight 0.65s cubic-bezier(0.22,1,0.36,1) 0.35s both,
+                floatIllust    4s   ease-in-out                   1.2s  infinite;
         }
-
-        /* Gambar dikurung dalam clip yang SAMA dengan form-section
-           tapi di sisi kanan — gambar menyesuaikan lekukan */
         .bg-image-container::before {
             content: '';
             position: absolute;
-            /* Sisakan area putih (form) di kiri, gambar hanya di kanan */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("{{ asset('img/Login.png') }}");
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-image: url("{{ asset('img/gambar_login.png') }}");
             background-size: 56% auto;
             background-repeat: no-repeat;
             background-position: right 20px center;
-
-            /* Clip mengikuti lekukan form section — mirror path-nya */
             clip-path: path('M 440 0 L 880 0 L 880 470 L 360 470 C 430 360, 310 285, 380 210 C 440 140, 330 65, 440 0 Z');
         }
-
-        /* Shimmer sweep di atas ilustrasi */
         .bg-image-container::after {
             content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                105deg,
-                transparent 40%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 60%
-            );
+            position: absolute; inset: 0;
+            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
             background-size: 200% 100%;
             animation: bgShimmer 3.5s ease-in-out 1.2s infinite;
             pointer-events: none;
         }
 
-        /* ══════════════════════════════════════
-           FORM SECTION (kiri, putih)
-        ══════════════════════════════════════ */
+        /* ══ FORM KIRI ══ */
         .form-section {
-            position: relative;
-            z-index: 2;
+            position: relative; z-index: 2;
             background: white;
-            height: 100%;
-            width: 50%;
-
-            /* Lekukan organik ke kanan */
+            height: 100%; width: 50%;
             clip-path: path('M 0 0 L 340 0 C 390 65, 275 140, 345 210 C 410 285, 295 360, 370 470 L 0 470 Z');
             border-radius: 16px 0 0 16px;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             justify-content: center;
             padding: 1.5rem 2.8rem;
-
-            /* Entrance: slide dari kiri */
-            animation: slideFromLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+            animation: slideFromLeft 0.65s cubic-bezier(0.22,1,0.36,1) 0.2s both;
         }
 
         /* ── Logo ── */
         .logo-area {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 10px;
+            display: flex; flex-direction: row;
+            align-items: center; gap: 10px;
             margin-bottom: 1rem;
-
-            animation: dropIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
+            animation: dropIn 0.5s cubic-bezier(0.22,1,0.36,1) 0.55s both;
         }
-
         .logo-area img {
-            width: 75px;
-            height: auto;
-            flex-shrink: 0;
+            width: 75px; height: auto; flex-shrink: 0;
             animation: floatLogo 3.5s ease-in-out 1.2s infinite,
                        logoShimmer 3.5s ease-in-out 1.2s infinite;
         }
-
         .logo-area .logo-text { display: flex; flex-direction: column; }
         .logo-area .logo-name {
             font-size: 1rem; font-weight: 800;
@@ -221,17 +177,13 @@
         }
 
         .logo-divider {
-            border: none;
-            border-top: 1px solid #e2e8f0;
+            border: none; border-top: 1px solid #e2e8f0;
             margin: 0 0 0.9rem 0;
             animation: fadeIn 0.4s ease 0.7s both;
         }
 
         /* ── Form container ── */
-        .form-container-box {
-            width: 100%;
-            max-width: 280px;
-        }
+        .form-container-box { width: 100%; max-width: 280px; }
 
         .form-title {
             color: #0c3992; font-size: 1.5rem;
@@ -249,30 +201,55 @@
             margin-bottom: 4px; display: block;
         }
 
-        /* Field username muncul lebih dulu */
-        .field-username {
-            animation: riseUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.85s both;
-        }
-        /* Field password sedikit setelah */
-        .field-password {
-            animation: riseUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both;
-        }
+        .field-username { animation: riseUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.85s both; }
+        .field-password { animation: riseUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.95s both; }
 
         .form-control, .input-group-text {
-            border-radius: 10px;
-            padding: 7px 12px;
+            border-radius: 10px; padding: 7px 12px;
             background-color: #f8fafc !important;
-            border-color: #e2e8f0;
-            font-size: 0.85rem;
+            border-color: #e2e8f0; font-size: 0.85rem;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         .form-control:focus {
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
             border-color: #007bff;
+        }
+        /* Input merah saat error */
+        .form-control.is-invalid-custom {
+            border-color: #e53e3e !important;
+            background-color: #fff5f5 !important;
         }
         .input-group-text { color: #94a3b8; }
 
-        /* ── Tombol Login ── */
+        /* ══════════════════════════════════════
+           NOTIFIKASI ERROR
+           – muncul di bawah subtitle
+           – animasi slide down + shake ringan
+        ══════════════════════════════════════ */
+        .alert-error {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff0f0;
+            border: 1.5px solid #feb2b2;
+            border-left: 4px solid #e53e3e;
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 0.78rem;
+            color: #c53030;
+            font-weight: 600;
+            animation: slideDown 0.35s cubic-bezier(0.22,1,0.36,1) both,
+                       shake       0.4s  ease                        0.1s both;
+        }
+        .alert-error i {
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            color: #e53e3e;
+        }
+        .alert-error span { line-height: 1.3; }
+
+        /* ── Tombol ── */
         .btn-login {
             background-color: #1d61e4;
             border: none; border-radius: 10px;
@@ -281,15 +258,12 @@
             color: white; margin-top: 10px;
             display: flex; align-items: center;
             justify-content: center; gap: 6px;
-            cursor: pointer; position: relative;
-            overflow: hidden;
+            cursor: pointer; position: relative; overflow: hidden;
             transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-
-            animation: riseUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 1.05s both;
+            animation: riseUp 0.45s cubic-bezier(0.22,1,0.36,1) 1.05s both;
         }
         .btn-login::before {
-            content: '';
-            position: absolute; inset: 0;
+            content: ''; position: absolute; inset: 0;
             background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.25) 50%, transparent 65%);
             background-size: 200% 100%;
             animation: btnShimmer 2.2s ease-in-out 1.2s infinite;
@@ -298,7 +272,7 @@
         .btn-login:hover {
             background-color: #1550c0;
             transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(29, 97, 228, 0.35);
+            box-shadow: 0 4px 14px rgba(29,97,228,0.35);
         }
         .btn-login:active { transform: translateY(0); box-shadow: none; }
         .btn-login.loading { pointer-events: none; background-color: #1550c0; }
@@ -310,7 +284,6 @@
             border-top-color: white; border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ── Success overlay ── */
         .success-overlay {
@@ -342,23 +315,9 @@
             margin: 0 auto 0.8rem;
             animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
         }
-        @keyframes popIn {
-            from { transform: scale(0); opacity: 0; }
-            to   { transform: scale(1); opacity: 1; }
-        }
         .checkmark-circle i { font-size: 1.8rem; color: #2e7d32; }
         .success-title { font-size: 1rem; font-weight: 700; color: #0c3992; margin-bottom: 4px; }
         .success-sub   { font-size: 0.75rem; color: #6c757d; }
-
-        /* ── Shake error ── */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%       { transform: translateX(-6px); }
-            40%       { transform: translateX(6px); }
-            60%       { transform: translateX(-4px); }
-            80%       { transform: translateX(4px); }
-        }
-        .shake { animation: shake 0.4s ease both; }
 
         /* ── Footer ── */
         .footer-area {
@@ -401,6 +360,28 @@
             <h3 class="form-title fw-bold">Selamat Datang</h3>
             <p class="form-subtitle">Login untuk mengakses sistem</p>
 
+            {{-- ══ NOTIFIKASI ERROR ══
+                 Muncul otomatis jika:
+                 1. session('error')  → dari AuthController saat credentials salah
+                 2. $errors->any()    → validasi Laravel gagal
+            ══════════════════════════ --}}
+            @if(session('error'))
+                <div class="alert-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @elseif($errors->has('username') || $errors->has('password'))
+                <div class="alert-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>{{ $errors->first('username') ?: $errors->first('password') }}</span>
+                </div>
+            @elseif($errors->has('credentials'))
+                <div class="alert-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>{{ $errors->first('credentials') }}</span>
+                </div>
+            @endif
+
             <form action="{{ route('login') }}" method="POST" id="loginForm">
                 @csrf
 
@@ -409,8 +390,9 @@
                     <div class="input-group">
                         <span class="input-group-text border-end-0"><i class="bi bi-person"></i></span>
                         <input type="text" name="username"
-                               class="form-control border-start-0"
+                               class="form-control border-start-0 {{ $errors->any() || session('error') ? 'is-invalid-custom' : '' }}"
                                placeholder="Masukkan username"
+                               value="{{ old('username') }}"
                                required autocomplete="off">
                     </div>
                 </div>
@@ -420,7 +402,7 @@
                     <div class="input-group">
                         <span class="input-group-text border-end-0"><i class="bi bi-lock"></i></span>
                         <input type="password" name="password"
-                               class="form-control border-start-0"
+                               class="form-control border-start-0 {{ $errors->any() || session('error') ? 'is-invalid-custom' : '' }}"
                                placeholder="Masukkan password"
                                id="passwordInput" required>
                         <span class="input-group-text bg-light border-start-0"
@@ -448,14 +430,6 @@
 @if(session('success') || (isset($loginSuccess) && $loginSuccess))
 <script>
     window.addEventListener('DOMContentLoaded', () => showSuccess());
-</script>
-@endif
-
-@if($errors->any())
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('loginForm').classList.add('shake');
-    });
 </script>
 @endif
 
