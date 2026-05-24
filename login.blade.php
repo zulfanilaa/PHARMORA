@@ -6,21 +6,20 @@
     <title>Login - PHARMORA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    
+
     <style>
-        body {
-            background-color: #d1e6ff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
             margin: 0;
-            padding: 10px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* ── Background bergerak gradient ── */
+        /* ── Animated gradient background ── */
         @keyframes bgShift {
             0%   { background-position: 0% 50%; }
             50%  { background-position: 100% 50%; }
@@ -31,51 +30,127 @@
             background: linear-gradient(135deg, #c2dcff, #daeeff, #b8d4ff, #e0eeff);
             background-size: 300% 300%;
             animation: bgShift 8s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* ── Card muncul ── */
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
+        /* ══════════════════════════════════════
+           ENTRANCE ANIMATIONS
+        ══════════════════════════════════════ */
+
+        /* Wrapper: zoom dari kecil ke normal */
+        @keyframes cardEntrance {
+            0%   { opacity: 0; transform: scale(0.82) translateY(30px); }
+            60%  { opacity: 1; transform: scale(1.02) translateY(-4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .login-wrapper {
-            background: #2b74e2;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            width: 100%;
-            max-width: 850px;
-            height: 450px;
-            position: relative;
-            animation: fadeSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        /* Form section: slide dari kiri */
+        @keyframes slideFromLeft {
+            0%   { opacity: 0; transform: translateX(-60px); }
+            100% { opacity: 1; transform: translateX(0); }
         }
 
-        /* ── Ilustrasi kanan: shimmer + floating ── */
+        /* Ilustrasi kanan: slide dari kanan */
+        @keyframes slideFromRight {
+            0%   { opacity: 0; transform: translateX(60px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Logo: muncul dari atas */
+        @keyframes dropIn {
+            0%   { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Field & button: muncul berurutan dari bawah */
+        @keyframes riseUp {
+            0%   { opacity: 0; transform: translateY(18px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Judul: fade in */
+        @keyframes fadeIn {
+            0%   { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* ── Idle loop: float + shimmer ── */
         @keyframes floatIllust {
-            0%, 100% { transform: translateY(0px);   }
+            0%, 100% { transform: translateY(0px); }
             50%       { transform: translateY(-7px); }
         }
-
-        @keyframes shimmerOverlay {
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-4px); }
+        }
+        @keyframes logoShimmer {
+            0%   { filter: drop-shadow(0 0 0px rgba(29, 97, 228, 0)); }
+            50%  { filter: drop-shadow(0 0 8px rgba(29, 97, 228, 0.45)); }
+            100% { filter: drop-shadow(0 0 0px rgba(29, 97, 228, 0)); }
+        }
+        @keyframes btnShimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes bgShimmer {
             0%   { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
 
+        /* ══════════════════════════════════════
+           CARD WRAPPER
+        ══════════════════════════════════════ */
+        .login-wrapper {
+            background: #2b74e2;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+            width: 880px;
+            height: 470px;
+            position: relative;
+
+            /* Entrance */
+            animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        /* ══════════════════════════════════════
+           ILUSTRASI KANAN
+           – clip sama persis dengan form-section
+           – gambar fill penuh di dalam clip-nya
+        ══════════════════════════════════════ */
         .bg-image-container {
             position: absolute;
             top: 0;
             right: 0;
             width: 100%;
             height: 100%;
-            background-image: url("{{ asset('img/gambar_login.png') }}");
-            background-size: 62% auto;
-            background-repeat: no-repeat;
-            background-position: right 15px center;
             z-index: 1;
 
-            /* Floating ilustrasi */
-            animation: floatIllust 4s ease-in-out infinite;
+            /* Entrance: slide dari kanan, delay setelah card muncul */
+            animation:
+                slideFromRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both,
+                floatIllust     4s   ease-in-out                      1.2s infinite;
+        }
+
+        /* Gambar dikurung dalam clip yang SAMA dengan form-section
+           tapi di sisi kanan — gambar menyesuaikan lekukan */
+        .bg-image-container::before {
+            content: '';
+            position: absolute;
+            /* Sisakan area putih (form) di kiri, gambar hanya di kanan */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("{{ asset('img/Login.png') }}");
+            background-size: 56% auto;
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+
+            /* Clip mengikuti lekukan form section — mirror path-nya */
+            clip-path: path('M 440 0 L 880 0 L 880 470 L 360 470 C 430 360, 310 285, 380 210 C 440 140, 330 65, 440 0 Z');
         }
 
         /* Shimmer sweep di atas ilustrasi */
@@ -86,110 +161,101 @@
             background: linear-gradient(
                 105deg,
                 transparent 40%,
-                rgba(255, 255, 255, 0.12) 50%,
+                rgba(255, 255, 255, 0.1) 50%,
                 transparent 60%
             );
             background-size: 200% 100%;
-            animation: shimmerOverlay 3.5s ease-in-out infinite;
+            animation: bgShimmer 3.5s ease-in-out 1.2s infinite;
             pointer-events: none;
         }
 
+        /* ══════════════════════════════════════
+           FORM SECTION (kiri, putih)
+        ══════════════════════════════════════ */
         .form-section {
             position: relative;
             z-index: 2;
             background: white;
             height: 100%;
-            width: 48%;
-            clip-path: path('M 0 0 L 330 0 C 380 60, 270 130, 340 210 C 400 280, 280 360, 360 450 L 0 450 Z');
+            width: 50%;
+
+            /* Lekukan organik ke kanan */
+            clip-path: path('M 0 0 L 340 0 C 390 65, 275 140, 345 210 C 410 285, 295 360, 370 470 L 0 470 Z');
             border-radius: 16px 0 0 16px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 1.5rem 2.5rem;
-            gap: 0;
+            padding: 1.5rem 2.8rem;
+
+            /* Entrance: slide dari kiri */
+            animation: slideFromLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
         }
 
-        /* ── Logo: floating pelan + shimmer kilap ── */
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0px);   }
-            50%       { transform: translateY(-4px); }
-        }
-
-        @keyframes logoShimmer {
-            0%   { filter: drop-shadow(0 0 0px rgba(29, 97, 228, 0)); }
-            50%  { filter: drop-shadow(0 0 8px rgba(29, 97, 228, 0.45)); }
-            100% { filter: drop-shadow(0 0 0px rgba(29, 97, 228, 0)); }
-        }
-
+        /* ── Logo ── */
         .logo-area {
             display: flex;
             flex-direction: row;
             align-items: center;
             gap: 10px;
             margin-bottom: 1rem;
+
+            animation: dropIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
         }
 
         .logo-area img {
             width: 75px;
             height: auto;
             flex-shrink: 0;
-            animation: floatLogo 3.5s ease-in-out infinite,
-                       logoShimmer 3.5s ease-in-out infinite;
+            animation: floatLogo 3.5s ease-in-out 1.2s infinite,
+                       logoShimmer 3.5s ease-in-out 1.2s infinite;
         }
 
-        .logo-area .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-
+        .logo-area .logo-text { display: flex; flex-direction: column; }
         .logo-area .logo-name {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #0c3992;
-            line-height: 1.1;
-            letter-spacing: 0.5px;
+            font-size: 1rem; font-weight: 800;
+            color: #1954c9; line-height: 1.1; letter-spacing: 0.5px;
         }
-
         .logo-area .logo-sub {
-            font-size: 0.6rem;
-            color: #6c757d;
-            font-weight: 500;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
+            font-size: 0.6rem; color: #6c757d; font-weight: 500;
+            letter-spacing: 0.4px; text-transform: uppercase;
         }
 
         .logo-divider {
             border: none;
             border-top: 1px solid #e2e8f0;
             margin: 0 0 0.9rem 0;
+            animation: fadeIn 0.4s ease 0.7s both;
         }
 
+        /* ── Form container ── */
         .form-container-box {
             width: 100%;
-            max-width: 270px;
+            max-width: 280px;
         }
 
         .form-title {
-            color: #0c3992;
-            font-size: 1.5rem;
-            margin-bottom: 2px;
-            line-height: 1.2;
+            color: #0c3992; font-size: 1.5rem;
+            margin-bottom: 2px; line-height: 1.2;
+            animation: fadeIn 0.45s ease 0.7s both;
         }
-
         .form-subtitle {
-            font-size: 0.78rem;
-            color: #6c757d;
-            margin-bottom: 0.9rem;
+            font-size: 0.78rem; color: #6c757d; margin-bottom: 0.9rem;
+            animation: fadeIn 0.45s ease 0.78s both;
         }
 
         .form-label-custom {
-            font-size: 0.68rem;
-            font-weight: 700;
-            color: #94a3b8;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-            display: block;
+            font-size: 0.68rem; font-weight: 700; color: #94a3b8;
+            letter-spacing: 0.6px; text-transform: uppercase;
+            margin-bottom: 4px; display: block;
+        }
+
+        /* Field username muncul lebih dulu */
+        .field-username {
+            animation: riseUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.85s both;
+        }
+        /* Field password sedikit setelah */
+        .field-password {
+            animation: riseUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both;
         }
 
         .form-control, .input-group-text {
@@ -200,161 +266,89 @@
             font-size: 0.85rem;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-
         .form-control:focus {
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
             border-color: #007bff;
         }
+        .input-group-text { color: #94a3b8; }
 
-        .input-group-text {
-            color: #94a3b8;
-        }
-
-        /* ── Tombol Login: shimmer sweep ── */
-        @keyframes btnShimmer {
-            0%   { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
-
+        /* ── Tombol Login ── */
         .btn-login {
             background-color: #1d61e4;
-            border: none;
-            border-radius: 10px;
-            padding: 8px;
-            font-weight: bold;
-            font-size: 0.88rem;
-            width: 100%;
-            color: white;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-            position: relative;
+            border: none; border-radius: 10px;
+            padding: 8px; font-weight: bold;
+            font-size: 0.88rem; width: 100%;
+            color: white; margin-top: 10px;
+            display: flex; align-items: center;
+            justify-content: center; gap: 6px;
+            cursor: pointer; position: relative;
             overflow: hidden;
             transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-        }
 
-        /* Shimmer layer di atas tombol */
+            animation: riseUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 1.05s both;
+        }
         .btn-login::before {
             content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                105deg,
-                transparent 35%,
-                rgba(255, 255, 255, 0.25) 50%,
-                transparent 65%
-            );
+            position: absolute; inset: 0;
+            background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.25) 50%, transparent 65%);
             background-size: 200% 100%;
-            animation: btnShimmer 2.2s ease-in-out infinite;
-            border-radius: inherit;
-            pointer-events: none;
+            animation: btnShimmer 2.2s ease-in-out 1.2s infinite;
+            border-radius: inherit; pointer-events: none;
         }
-
         .btn-login:hover {
             background-color: #1550c0;
             transform: translateY(-1px);
             box-shadow: 0 4px 14px rgba(29, 97, 228, 0.35);
         }
-
-        .btn-login:active {
-            transform: translateY(0px);
-            box-shadow: none;
-        }
-
-        .btn-login.loading {
-            pointer-events: none;
-            background-color: #1550c0;
-        }
+        .btn-login:active { transform: translateY(0); box-shadow: none; }
+        .btn-login.loading { pointer-events: none; background-color: #1550c0; }
 
         /* ── Spinner ── */
         .spinner {
-            display: none;
-            width: 15px;
-            height: 15px;
+            display: none; width: 15px; height: 15px;
             border: 2px solid rgba(255,255,255,0.4);
-            border-top-color: white;
-            border-radius: 50%;
+            border-top-color: white; border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ── Overlay sukses ── */
+        /* ── Success overlay ── */
         .success-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0;
+            position: fixed; inset: 0;
+            background: rgba(255,255,255,0);
+            display: flex; align-items: center;
+            justify-content: center; z-index: 9999;
+            pointer-events: none; opacity: 0;
             transition: opacity 0.3s;
         }
-
         .success-overlay.show {
-            opacity: 1;
-            pointer-events: all;
-            background: rgba(255, 255, 255, 0.6);
+            opacity: 1; pointer-events: all;
+            background: rgba(255,255,255,0.6);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
         }
-
         .success-box {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem 2.5rem;
-            text-align: center;
+            background: white; border-radius: 16px;
+            padding: 2rem 2.5rem; text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-            transform: scale(0.85);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+            transform: scale(0.85); opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
         }
-
-        .success-overlay.show .success-box {
-            transform: scale(1);
-            opacity: 1;
-        }
-
+        .success-overlay.show .success-box { transform: scale(1); opacity: 1; }
         .checkmark-circle {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
+            width: 56px; height: 56px; border-radius: 50%;
             background: #e8f5e9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             margin: 0 auto 0.8rem;
-            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+            animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
         }
-
         @keyframes popIn {
             from { transform: scale(0); opacity: 0; }
             to   { transform: scale(1); opacity: 1; }
         }
-
-        .checkmark-circle i {
-            font-size: 1.8rem;
-            color: #2e7d32;
-        }
-
-        .success-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #0c3992;
-            margin-bottom: 4px;
-        }
-
-        .success-sub {
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
+        .checkmark-circle i { font-size: 1.8rem; color: #2e7d32; }
+        .success-title { font-size: 1rem; font-weight: 700; color: #0c3992; margin-bottom: 4px; }
+        .success-sub   { font-size: 0.75rem; color: #6c757d; }
 
         /* ── Shake error ── */
         @keyframes shake {
@@ -364,36 +358,14 @@
             60%       { transform: translateX(-4px); }
             80%       { transform: translateX(4px); }
         }
+        .shake { animation: shake 0.4s ease both; }
 
-        .shake {
-            animation: shake 0.4s ease both;
-        }
-
+        /* ── Footer ── */
         .footer-area {
             margin-top: 1rem;
+            animation: fadeIn 0.45s ease 1.15s both;
         }
-
-        .footer-area p {
-            font-size: 0.62rem;
-            color: #adb5bd;
-            margin: 0;
-        }
-
-        @media (max-width: 768px) {
-            .login-wrapper {
-                height: auto;
-                min-height: 400px;
-            }
-            .form-section {
-                width: 100%;
-                clip-path: none;
-                border-radius: 20px;
-                padding: 2rem 1.5rem;
-            }
-            .bg-image-container {
-                display: none;
-            }
-        }
+        .footer-area p { font-size: 0.62rem; color: #adb5bd; margin: 0; }
     </style>
 </head>
 <body>
@@ -410,9 +382,9 @@
 </div>
 
 <div class="login-wrapper">
-    
+
     <div class="bg-image-container"></div>
-        
+
     <div class="form-section">
 
         <div class="logo-area">
@@ -432,20 +404,27 @@
             <form action="{{ route('login') }}" method="POST" id="loginForm">
                 @csrf
 
-                <div class="mb-2">
+                <div class="mb-2 field-username">
                     <label class="form-label-custom">Username</label>
                     <div class="input-group">
                         <span class="input-group-text border-end-0"><i class="bi bi-person"></i></span>
-                        <input type="text" name="username" class="form-control border-start-0" placeholder="Masukkan username" required autocomplete="off">
+                        <input type="text" name="username"
+                               class="form-control border-start-0"
+                               placeholder="Masukkan username"
+                               required autocomplete="off">
                     </div>
                 </div>
 
-                <div class="mb-1">
+                <div class="mb-1 field-password">
                     <label class="form-label-custom">Password</label>
                     <div class="input-group">
                         <span class="input-group-text border-end-0"><i class="bi bi-lock"></i></span>
-                        <input type="password" name="password" class="form-control border-start-0" placeholder="Masukkan password" id="passwordInput" required>
-                        <span class="input-group-text bg-light border-start-0" style="cursor: pointer;" onclick="togglePassword()">
+                        <input type="password" name="password"
+                               class="form-control border-start-0"
+                               placeholder="Masukkan password"
+                               id="passwordInput" required>
+                        <span class="input-group-text bg-light border-start-0"
+                              style="cursor: pointer;" onclick="togglePassword()">
                             <i class="bi bi-eye" id="toggleIcon"></i>
                         </span>
                     </div>
@@ -482,28 +461,26 @@
 
 <script>
     function togglePassword() {
-        const passwordInput = document.getElementById('passwordInput');
-        const toggleIcon = document.getElementById('toggleIcon');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+        const input = document.getElementById('passwordInput');
+        const icon  = document.getElementById('toggleIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
         } else {
-            passwordInput.type = 'password';
-            toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
         }
     }
 
     function showSuccess() {
-        const overlay = document.getElementById('successOverlay');
-        overlay.classList.add('show');
+        document.getElementById('successOverlay').classList.add('show');
     }
 
-    document.getElementById('loginForm').addEventListener('submit', function() {
+    document.getElementById('loginForm').addEventListener('submit', function () {
         const btn     = document.getElementById('btnLogin');
         const spinner = document.getElementById('btnSpinner');
         const icon    = document.getElementById('btnIcon');
         const text    = document.getElementById('btnText');
-
         btn.classList.add('loading');
         spinner.style.display = 'block';
         icon.style.display    = 'none';
