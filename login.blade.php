@@ -17,53 +17,19 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* ── Animasi background ── */
-        @keyframes bgPulse {
+        @keyframes bgShift {
             0%   { background-position: 0% 50%; }
             50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        @keyframes bgOrbs {
-            0%, 100% { transform: scale(1) translate(0, 0); }
-            33%       { transform: scale(1.1) translate(20px, -15px); }
-            66%       { transform: scale(0.95) translate(-15px, 10px); }
-        }
 
         body {
-            background: linear-gradient(135deg, #a8c8ff, #c5deff, #d4e8ff, #b0ccff, #e8f2ff, #9dc0ff);
-            background-size: 400% 400%;
-            animation: bgPulse 10s ease infinite;
+            background: linear-gradient(135deg, #c2dcff, #daeeff, #b8d4ff, #e0eeff);
+            background-size: 300% 300%;
+            animation: bgShift 8s ease infinite;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Orb kiri atas */
-        body::before {
-            content: '';
-            position: fixed;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(100,160,255,0.35) 0%, transparent 70%);
-            top: -100px; left: -100px;
-            border-radius: 50%;
-            animation: bgOrbs 8s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Orb kanan bawah */
-        body::after {
-            content: '';
-            position: fixed;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(150,200,255,0.3) 0%, transparent 70%);
-            bottom: -80px; right: -80px;
-            border-radius: 50%;
-            animation: bgOrbs 11s ease-in-out 2s infinite reverse;
-            pointer-events: none;
-            z-index: 0;
         }
 
         @keyframes cardEntrance {
@@ -131,7 +97,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ══ CARD ══ */
         .login-wrapper {
             background: #2b74e2;
             border-radius: 20px;
@@ -140,11 +105,9 @@
             width: 880px;
             height: 470px;
             position: relative;
-            z-index: 1;
             animation: cardEntrance 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
 
-        /* ══ ILUSTRASI KANAN ══ */
         .bg-image-container {
             position: absolute;
             top: 0; right: 0;
@@ -174,7 +137,6 @@
             pointer-events: none;
         }
 
-        /* ══ FORM KIRI ══ */
         .form-section {
             position: relative; z-index: 2;
             background: white;
@@ -187,29 +149,25 @@
             animation: slideFromLeft 0.65s cubic-bezier(0.22,1,0.36,1) 0.2s both;
         }
 
-        /* ── Logo ── */
         .logo-area {
             display: flex; flex-direction: row;
-            align-items: center; gap: 8px;
+            align-items: center; gap: 10px;
             margin-bottom: 1rem;
-            flex-wrap: nowrap;
             animation: dropIn 0.5s cubic-bezier(0.22,1,0.36,1) 0.55s both;
         }
         .logo-area img {
-            width: 80px; height: auto; flex-shrink: 0;
+            width: 75px; height: auto; flex-shrink: 0;
             animation: floatLogo 3.5s ease-in-out 1.2s infinite,
                        logoShimmer 3.5s ease-in-out 1.2s infinite;
         }
         .logo-area .logo-text { display: flex; flex-direction: column; }
         .logo-area .logo-name {
-            font-size: 1.7rem; font-weight: 800;
+            font-size: 1rem; font-weight: 800;
             color: #1954c9; line-height: 1.1; letter-spacing: 0.5px;
-            white-space: nowrap;
         }
         .logo-area .logo-sub {
-            font-size: 0.62rem; color: #6c757d; font-weight: 500;
+            font-size: 0.6rem; color: #6c757d; font-weight: 500;
             letter-spacing: 0.4px; text-transform: uppercase;
-            white-space: nowrap;
         }
 
         .logo-divider {
@@ -218,7 +176,6 @@
             animation: fadeIn 0.4s ease 0.7s both;
         }
 
-        /* ── Form container ── */
         .form-container-box { width: 100%; max-width: 280px; }
 
         .form-title {
@@ -256,7 +213,22 @@
         }
         .input-group-text { color: #94a3b8; }
 
-        /* ══ NOTIFIKASI ERROR ══ */
+        .password-hint {
+            font-size: 0.63rem;
+            color: #94a3b8;
+            margin-top: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2px;
+        }
+        .password-hint .char-count {
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+        .password-hint .char-count.valid   { color: #2e7d32; }
+        .password-hint .char-count.invalid { color: #e53e3e; }
+
         .alert-error {
             display: flex;
             align-items: center;
@@ -273,14 +245,31 @@
             animation: slideDown 0.35s cubic-bezier(0.22,1,0.36,1) both,
                        shake       0.4s  ease                        0.1s both;
         }
-        .alert-error i {
-            font-size: 0.95rem;
-            flex-shrink: 0;
-            color: #e53e3e;
-        }
+        .alert-error i { font-size: 0.95rem; flex-shrink: 0; color: #e53e3e; }
         .alert-error span { line-height: 1.3; }
 
-        /* ── Tombol ── */
+        .alert-client-error {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: #fff0f0;
+            border: 1.5px solid #feb2b2;
+            border-left: 4px solid #e53e3e;
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 0.78rem;
+            color: #c53030;
+            font-weight: 600;
+        }
+        .alert-client-error.show {
+            display: flex;
+            animation: slideDown 0.35s cubic-bezier(0.22,1,0.36,1) both,
+                       shake       0.4s  ease                        0.1s both;
+        }
+        .alert-client-error i { font-size: 0.95rem; flex-shrink: 0; color: #e53e3e; }
+        .alert-client-error span { line-height: 1.3; }
+
         .btn-login {
             background-color: #1d61e4;
             border: none; border-radius: 10px;
@@ -308,7 +297,6 @@
         .btn-login:active { transform: translateY(0); box-shadow: none; }
         .btn-login.loading { pointer-events: none; background-color: #1550c0; }
 
-        /* ── Spinner ── */
         .spinner {
             display: none; width: 15px; height: 15px;
             border: 2px solid rgba(255,255,255,0.4);
@@ -316,7 +304,6 @@
             animation: spin 0.7s linear infinite;
         }
 
-        /* ── Success overlay ── */
         .success-overlay {
             position: fixed; inset: 0;
             background: rgba(255,255,255,0);
@@ -350,7 +337,6 @@
         .success-title { font-size: 1rem; font-weight: 700; color: #0c3992; margin-bottom: 4px; }
         .success-sub   { font-size: 0.75rem; color: #6c757d; }
 
-        /* ── Footer ── */
         .footer-area {
             margin-top: 1rem;
             animation: fadeIn 0.45s ease 1.15s both;
@@ -360,7 +346,6 @@
 </head>
 <body>
 
-<!-- Overlay sukses -->
 <div class="success-overlay" id="successOverlay">
     <div class="success-box">
         <div class="checkmark-circle">
@@ -408,6 +393,11 @@
                 </div>
             @endif
 
+            <div class="alert-client-error" id="clientError">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span id="clientErrorMsg"></span>
+            </div>
+
             <form action="{{ route('login') }}" method="POST" id="loginForm">
                 @csrf
 
@@ -429,14 +419,15 @@
                         <span class="input-group-text border-end-0"><i class="bi bi-lock"></i></span>
                         <input type="password" name="password"
                                class="form-control border-start-0 {{ $errors->any() || session('error') ? 'is-invalid-custom' : '' }}"
-                               placeholder="Masukkan password"
-                               id="passwordInput" required>
+                               placeholder="Min. 8 karakter, huruf &amp; angka"
+                               id="passwordInput"
+                               minlength="8"
+                               required>
                         <span class="input-group-text bg-light border-start-0"
                               style="cursor: pointer;" onclick="togglePassword()">
                             <i class="bi bi-eye" id="toggleIcon"></i>
                         </span>
                     </div>
-                </div>
 
                 <button type="submit" class="btn-login" id="btnLogin">
                     <span class="spinner" id="btnSpinner"></span>
@@ -453,13 +444,25 @@
     </div>
 </div>
 
-@if(session('success') || (isset($loginSuccess) && $loginSuccess))
 <script>
-    window.addEventListener('DOMContentLoaded', () => showSuccess());
-</script>
-@endif
+    // ✅ pageshow: terpanggil saat load biasa DAN saat klik tombol back browser
+    window.addEventListener('pageshow', function () {
+        const btn     = document.getElementById('btnLogin');
+        const spinner = document.getElementById('btnSpinner');
+        const icon    = document.getElementById('btnIcon');
+        const text    = document.getElementById('btnText');
+        btn.classList.remove('loading');
+        spinner.style.display = 'none';
+        icon.style.display    = 'inline';
+        text.textContent      = 'Masuk';
+    });
 
-<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        @if(session('success') || (isset($loginSuccess) && $loginSuccess))
+            showSuccess();
+        @endif
+    });
+
     function togglePassword() {
         const input = document.getElementById('passwordInput');
         const icon  = document.getElementById('toggleIcon');
@@ -476,7 +479,58 @@
         document.getElementById('successOverlay').classList.add('show');
     }
 
-    document.getElementById('loginForm').addEventListener('submit', function () {
+    const passwordInput = document.getElementById('passwordInput');
+    const charCount     = document.getElementById('charCount');
+    const clientError   = document.getElementById('clientError');
+    const clientMsg     = document.getElementById('clientErrorMsg');
+
+    function showClientError(msg) {
+        clientMsg.textContent = msg;
+        clientError.classList.add('show');
+        passwordInput.classList.add('is-invalid-custom');
+    }
+
+    function hideClientError() {
+        clientError.classList.remove('show');
+        passwordInput.classList.remove('is-invalid-custom');
+    }
+
+    passwordInput.addEventListener('input', function () {
+        const val = this.value;
+        const len = val.length;
+
+        charCount.textContent = len;
+        if (len >= 8) {
+            charCount.classList.add('valid');
+            charCount.classList.remove('invalid');
+        } else {
+            charCount.classList.add('invalid');
+            charCount.classList.remove('valid');
+        }
+
+        if (/[^a-zA-Z0-9]/.test(val)) {
+            showClientError('Password hanya boleh berisi huruf dan angka.');
+        } else {
+            hideClientError();
+        }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        const val = passwordInput.value;
+
+        if (val.length < 8) {
+            e.preventDefault();
+            showClientError('Password minimal 8 karakter.');
+            return;
+        }
+
+        if (/[^a-zA-Z0-9]/.test(val)) {
+            e.preventDefault();
+            showClientError('Password hanya boleh berisi huruf dan angka.');
+            return;
+        }
+
+        // ✅ Loading hanya aktif setelah validasi lolos
         const btn     = document.getElementById('btnLogin');
         const spinner = document.getElementById('btnSpinner');
         const icon    = document.getElementById('btnIcon');
